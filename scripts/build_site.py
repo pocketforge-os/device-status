@@ -2,7 +2,7 @@
 """Validate public sources and stage only the explicit portable site files."""
 import argparse
 import hashlib
-from html import escape, unescape
+from html import unescape
 from html.parser import HTMLParser
 import json
 import os
@@ -18,6 +18,11 @@ SITE_FILES = ('index.html', 'provenance.json',
 REVIEWED_PAIR = {
     'trimui-smart-pro/hardware-status.html': '70f2a3d9f940ee438dac96b7a08ef0c4ea263797bda271184b75f442808b399e',
     'trimui-smart-pro/hardware-status.json': 'f517a4b707db45020443d27f72b19a1858fa86f4ca28f04cbd19820dc5fda831',
+}
+# Reviewed editorial bytes are release pins, not a natural-language validator.
+REVIEWED_PAGES = {
+    'index.html': '021692a698da4507d3dd341dec2a855ed067760764875c382e26ac4d930c5580',
+    'README.md': '264a23a021480476f0f9d86ea49b278a365fae017e331e2b6a2637ebb37c0312',
 }
 REVIEWED_EXPORTER = '9aeb42645c332cd701e49fee1d072be34583bc31'
 SOURCE_FILES = set(SITE_FILES) | {'README.md', '.gitignore', 'scripts/build_site.py',
@@ -113,21 +118,6 @@ class StaticHTML(HTMLParser):
             require(all(f.lower() in {'var', 'clamp', 'media'} for f in functions), 'Unlisted CSS function.')
 
 
-def landing_facts(text, readme, data):
-    device = data['device']
-    require(f"<h2>{escape(device['name'])}</h2>" in text
-            and f"<p>{escape(device['soc'])} · {escape(device['gpu'])}</p>" in text,
-            'Landing-page device metadata differs from reviewed snapshot.')
-    require(f"Snapshot: {data['snapshot_at']}. Exported: {data['generated_at']}." in text,
-            'Landing-page snapshot dates differ.')
-    normalized = ' '.join(readme.split())
-    require(f"The current snapshot is **{data['snapshot_at']}**, exported at **{data['generated_at']}**."
-            in normalized, 'README snapshot dates differ.')
-    total = sum(len(g['rows']) for g in data['priorities'])
-    require(f"It covers {len(data['hardware'])} hardware components and {total} product priorities."
-            in normalized, 'README totals differ.')
-
-
 def source_inventory(root):
     found = set()
     for directory, dirs, files in os.walk(root, followlinks=False):
@@ -150,6 +140,9 @@ def validate_source(root):
     root = Path(root)
     source_inventory(root)
     content = {name: (root/name).read_bytes() for name in SITE_FILES}
+    for name, digest in REVIEWED_PAGES.items():
+        raw = (root/name).read_bytes() if name == 'README.md' else content[name]
+        require(hashlib.sha256(raw).hexdigest() == digest, 'Reviewed landing-page or README hash mismatch.')
     public_text = {name: raw.decode('utf-8') for name, raw in content.items()}
     public_text['README.md'] = (root/'README.md').read_text(encoding='utf-8')
     for text in public_text.values():
@@ -168,11 +161,12 @@ def validate_source(root):
     public_strings(data)
     require(provenance['snapshot_at'] == data['snapshot_at']
             and provenance['exported_at'] == data['generated_at'], 'Provenance timestamp mismatch.')
-    landing_facts(public_text['index.html'], public_text['README.md'], data)
     for name in SITE_FILES:
         if name.endswith('.html'):
             text = public_text[name]
-            StaticHTML(name).feed(text)
+            parser = StaticHTML(name)
+            parser.feed(text)
+            parser.close()  # Flush EOF raw text (notably an unterminated style).
     return content
 
 

@@ -11,6 +11,7 @@ import sys
 import tempfile
 import types
 import unittest
+from unittest import mock
 
 sys.dont_write_bytecode = True
 ROOT = Path(__file__).resolve().parents[1]
@@ -105,6 +106,16 @@ class SiteTest(unittest.TestCase):
                 root=self.fixture(td);p=root/name;p.write_text(p.read_text().replace(before,after))
                 with self.assertRaises(ValueError):site.validate_source(root)
 
+    def test_contradictory_landing_and_readme_appends_refuse(self):
+        cases=[('index.html','<article><h2>Another device</h2><p>Another chip · Another GPU</p></article>'),
+               ('index.html','<article><p>Snapshot: 2000-01-01T00:00:00Z. Exported: 2000-01-02T00:00:00Z.</p></article>'),
+               ('README.md','The current snapshot is **2000-01-01T00:00:00Z**, exported at **2000-01-02T00:00:00Z**.'),
+               ('README.md','It covers 999 hardware components and 999 product priorities.')]
+        for name,extra in cases:
+            with self.subTest(name=name,extra=extra),tempfile.TemporaryDirectory() as td:
+                root=self.fixture(td);p=root/name;p.write_text(p.read_text()+'\n'+extra)
+                with self.assertRaises(ValueError):site.validate_source(root)
+
     def test_external_fetch_constructs_refuse(self):
         payloads=[r'<style>body{background:u\72l(https://example.invalid/a)}</style>',
                   '<style>body{background:image-set("https://example.invalid/a" 1x)}</style>',
@@ -117,6 +128,27 @@ class SiteTest(unittest.TestCase):
             with self.subTest(payload=payload),tempfile.TemporaryDirectory() as td:
                 root=self.fixture(td);p=root/'index.html';p.write_text(p.read_text()+payload)
                 with self.assertRaises(ValueError):site.validate_source(root)
+
+    def test_unterminated_styles_refuse_on_both_html_parser_paths(self):
+        css=['body{background:url(https://example.invalid/a)}',
+             'body{background:image-set("https://example.invalid/a" 1x)}',
+             '@import "https://example.invalid/a";',r'body{background:u\72l(x)}',
+             'body{color:"red"}','/* comment */','body{color:réd}']
+        for name in ('index.html','trimui-smart-pro/hardware-status.html'):
+            for payload in css:
+                with self.subTest(name=name,payload=payload):
+                    parser=site.StaticHTML(name)
+                    with self.assertRaises(ValueError):
+                        parser.feed('<style>'+payload)
+                        parser.close()
+
+    def test_build_finishes_both_html_parsers(self):
+        closed=[];original=site.StaticHTML.close
+        def close(parser):
+            closed.append(parser.name)
+            return original(parser)
+        with mock.patch.object(site.StaticHTML,'close',close):site.validate_source(ROOT)
+        self.assertEqual(sorted(closed),['index.html','trimui-smart-pro/hardware-status.html'])
 
     def test_direct_suite_ignores_timestamp_valid_stale_bytecode(self):
         with tempfile.TemporaryDirectory() as td:

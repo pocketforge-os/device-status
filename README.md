@@ -36,14 +36,15 @@ the static content or data format.
 ## Updating a snapshot
 
 Review the exported pair and its privacy boundary before a normal update PR.
-This publisher accepts one independently reviewed, immutable export, pinned by
-two SHA256 constants and the exporter revision in the build source. It does not validate or render arbitrary
-new snapshots. Keep the reviewed pair unchanged, deliberately update those source
-release pins and matching provenance after a separately reviewed export, and
-update the landing page/README dates and totals. Do not copy operational snapshots,
+This publisher accepts one independently reviewed static release: the unchanged
+exported HTML/JSON pair, landing page and this README have fixed SHA256 release
+pins in the build source, along with the exporter revision. It does not validate
+or render arbitrary new snapshots. After a separately reviewed export, deliberately
+update those source pins and matching provenance, and review the landing page/README
+dates, totals and prose together. Do not copy operational snapshots,
 private receipts, commands, identifiers or unrelated files into this repository.
 CI checks the file allowlist, fixed release pins, minimal public JSON shape,
-landing facts, static links and resource-free HTML/CSS subset. The test command
+static links and resource-free HTML/CSS subset. The test command
 executes current source bytes directly, without importing cached local bytecode.
 The build job is bounded to five minutes. These checks support privacy
 review; they do not replace inspection of new public prose. Publishing a snapshot does not
