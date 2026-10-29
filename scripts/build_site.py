@@ -2,7 +2,7 @@
 """Validate public sources and stage only the explicit portable site files."""
 import argparse
 import hashlib
-from html import unescape
+from html import escape, unescape
 from html.parser import HTMLParser
 import json
 import os
@@ -13,10 +13,16 @@ from urllib.parse import unquote, urlsplit
 
 SITE_FILES = ('index.html', 'provenance.json',
               'trimui-smart-pro/hardware-status.html', 'trimui-smart-pro/hardware-status.json')
+# Release pins for the independently reviewed exporter output. Provenance alone
+# cannot authorize different bytes. Updating these pins requires a reviewed export.
+REVIEWED_PAIR = {
+    'trimui-smart-pro/hardware-status.html': '70f2a3d9f940ee438dac96b7a08ef0c4ea263797bda271184b75f442808b399e',
+    'trimui-smart-pro/hardware-status.json': 'f517a4b707db45020443d27f72b19a1858fa86f4ca28f04cbd19820dc5fda831',
+}
+REVIEWED_EXPORTER = '9aeb42645c332cd701e49fee1d072be34583bc31'
 SOURCE_FILES = set(SITE_FILES) | {'README.md', '.gitignore', 'scripts/build_site.py',
                                 'tests/test_site.py', '.github/workflows/pages.yml'}
 PRIVATE = re.compile(r'/(?:home|root|run|tmp|var)/|\.lan\b|\b(?:pft-|tsp-)|\b(?:[0-9]{1,3}\.){3}[0-9]{1,3}\b|\b(?:[0-9a-fA-F]{2}:){5}[0-9a-fA-F]{2}\b')
-HEX = re.compile(r'[0-9a-f]{64}')
 ROW_KEYS = {'id', 'name', 'scope', 'state', 'build', 'evidence_recorded_at', 'basis',
             'record_age_days', 'summary', 'limitations', 'next_validation', 'evidence_digests'}
 
@@ -61,16 +67,25 @@ def public_shape(data):
 
 
 class StaticHTML(HTMLParser):
+    TAGS = {'html', 'head', 'meta', 'title', 'style', 'body', 'main', 'header', 'p',
+            'h1', 'h2', 'h3', 'article', 'a', 'small', 'footer', 'section', 'aside',
+            'strong', 'div', 'time', 'br', 'code', 'span'}
+
     def __init__(self, name):
         super().__init__(convert_charrefs=True)
         self.name = name
+        self.in_style = False
 
     def handle_starttag(self, tag, attrs):
-        require(tag not in {'script', 'link', 'img', 'iframe', 'object', 'embed', 'audio', 'video', 'form', 'base'},
-                'Active or external HTML resource.')
+        require(tag in self.TAGS, 'Unlisted HTML tag.')
+        allowed = {'html': {'lang'}, 'meta': {'charset', 'name', 'content'}, 'a': {'href'}}.get(tag, {'class'})
+        require(len({k for k, _ in attrs}) == len(attrs), 'Duplicate HTML attribute.')
+        if tag == 'meta':
+            require(dict(attrs) in ({'charset': 'utf-8'},
+                                   {'name': 'viewport', 'content': 'width=device-width, initial-scale=1'}),
+                    'Unlisted HTML metadata.')
         for key, value in attrs:
-            require(not key.startswith('on') and key not in {'src', 'srcset', 'action', 'http-equiv'},
-                    'Active HTML attribute.')
+            require(key in allowed, 'Unlisted HTML attribute.')
             if key == 'href':
                 require(tag == 'a' and isinstance(value, str), 'Invalid static link.')
                 url = urlsplit(value)
@@ -80,6 +95,37 @@ class StaticHTML(HTMLParser):
                         'Nonportable static link.')
                 target = str(PurePosixPath(self.name).parent / path)
                 require(target in SITE_FILES, 'Broken or unlisted static link.')
+        if tag == 'style':
+            self.in_style = True
+
+    def handle_endtag(self, tag):
+        if tag == 'style':
+            self.in_style = False
+
+    def handle_data(self, data):
+        if self.in_style:
+            # This static layout needs no CSS strings, escapes, comments or
+            # fetching functions. Reject those rather than normalize arbitrary CSS.
+            require(data.isascii() and not any(x in data for x in ('\\', '"', "'", '/*', '*/')),
+                    'Unlisted CSS syntax.')
+            require('@' not in re.sub(r'@media(?=\s*\()', '', data, flags=re.I), 'Unlisted CSS rule.')
+            functions = re.findall(r'([-\w]+)\s*\(', data)
+            require(all(f.lower() in {'var', 'clamp', 'media'} for f in functions), 'Unlisted CSS function.')
+
+
+def landing_facts(text, readme, data):
+    device = data['device']
+    require(f"<h2>{escape(device['name'])}</h2>" in text
+            and f"<p>{escape(device['soc'])} · {escape(device['gpu'])}</p>" in text,
+            'Landing-page device metadata differs from reviewed snapshot.')
+    require(f"Snapshot: {data['snapshot_at']}. Exported: {data['generated_at']}." in text,
+            'Landing-page snapshot dates differ.')
+    normalized = ' '.join(readme.split())
+    require(f"The current snapshot is **{data['snapshot_at']}**, exported at **{data['generated_at']}**."
+            in normalized, 'README snapshot dates differ.')
+    total = sum(len(g['rows']) for g in data['priorities'])
+    require(f"It covers {len(data['hardware'])} hardware components and {total} product priorities."
+            in normalized, 'README totals differ.')
 
 
 def source_inventory(root):
@@ -110,26 +156,22 @@ def validate_source(root):
         require(not PRIVATE.search(unescape(text)), 'Private metadata in public content.')
     provenance = json.loads(public_text['provenance.json'])
     keys(provenance, {'exporter_commit', 'snapshot_at', 'exported_at', 'artifacts'})
-    require(isinstance(provenance['exporter_commit'], str)
-            and re.fullmatch(r'[0-9a-f]{40}', provenance['exporter_commit']), 'Invalid exporter revision.')
+    require(provenance['exporter_commit'] == REVIEWED_EXPORTER, 'Reviewed exporter revision differs.')
     pair = set(SITE_FILES[2:])
     keys(provenance['artifacts'], pair)
     for name in pair:
         digest = provenance['artifacts'][name]
-        require(isinstance(digest, str) and HEX.fullmatch(digest)
+        require(digest == REVIEWED_PAIR[name]
                 and hashlib.sha256(content[name]).hexdigest() == digest, 'Reviewed artifact hash mismatch.')
     data = json.loads(public_text['trimui-smart-pro/hardware-status.json'])
     public_shape(data)
     public_strings(data)
     require(provenance['snapshot_at'] == data['snapshot_at']
             and provenance['exported_at'] == data['generated_at'], 'Provenance timestamp mismatch.')
-    for name in ('index.html', 'README.md'):
-        require(data['snapshot_at'] in public_text[name] and data['generated_at'] in public_text[name],
-                'Landing-page or README dates are stale.')
+    landing_facts(public_text['index.html'], public_text['README.md'], data)
     for name in SITE_FILES:
         if name.endswith('.html'):
             text = public_text[name]
-            require(not re.search(r'@import|url\s*\(', text, re.I), 'External CSS resource.')
             StaticHTML(name).feed(text)
     return content
 

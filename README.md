@@ -18,7 +18,7 @@ Python 3.12 with its standard library is sufficient; there are no package instal
 remote assets, analytics, live queries or private service dependencies.
 
 ```sh
-python3 -m unittest discover -s tests -v
+python3 tests/test_site.py -v
 python3 scripts/build_site.py --output _site
 ```
 
@@ -36,10 +36,15 @@ the static content or data format.
 ## Updating a snapshot
 
 Review the exported pair and its privacy boundary before a normal update PR.
-Keep the pair unchanged, update the two hashes and timestamps in provenance,
-and update the landing page/README dates. Do not copy operational snapshots,
+This publisher accepts one independently reviewed, immutable export, pinned by
+two SHA256 constants and the exporter revision in the build source. It does not validate or render arbitrary
+new snapshots. Keep the reviewed pair unchanged, deliberately update those source
+release pins and matching provenance after a separately reviewed export, and
+update the landing page/README dates and totals. Do not copy operational snapshots,
 private receipts, commands, identifiers or unrelated files into this repository.
-CI checks the file allowlist, hashes, public JSON shape, static links and absence
-of private metadata or active/external resources. These checks support privacy
+CI checks the file allowlist, fixed release pins, minimal public JSON shape,
+landing facts, static links and resource-free HTML/CSS subset. The test command
+executes current source bytes directly, without importing cached local bytecode.
+The build job is bounded to five minutes. These checks support privacy
 review; they do not replace inspection of new public prose. Publishing a snapshot does not
 turn a partial result into complete device acceptance.
