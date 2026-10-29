@@ -6,21 +6,21 @@
     "scope": "Functional downstream hardware support first. Upstreaming follows later; this page makes no upstream acceptance claim.",
     "soc": "Allwinner A133"
   },
-  "generated_at": "2026-10-29T20:31:39Z",
+  "generated_at": "2026-10-29T23:27:24Z",
   "hardware": [
     {
-      "basis": "Historical inventory",
-      "build": null,
+      "basis": "Build observation",
+      "build": "57",
       "evidence_digests": [],
-      "evidence_recorded_at": "2026-10-18T00:00:00Z",
+      "evidence_recorded_at": "2026-10-29T22:03:50Z",
       "id": "display_panel",
-      "limitations": "No current-image acceptance is established by this export. Validate the stated scope on the intended image.",
+      "limitations": "Physical panel quality and repeated display lifecycle and recovery acceptance remain pending.",
       "name": "Display panel",
-      "next_validation": "Verify reliable display and recovery after a graphics session.",
-      "record_age_days": 11,
+      "next_validation": "Validate physical panel quality and repeated display lifecycle and recovery on the intended image.",
+      "record_age_days": 0,
       "scope": "Day one",
-      "state": "Broken",
-      "summary": "Evidence detail not yet published."
+      "state": "Partial",
+      "summary": "Build 57 display clock and register readback agree with the owned Linux 7.2 driver."
     },
     {
       "basis": "Build observation",
@@ -31,7 +31,7 @@
       "limitations": "No current-image acceptance is established by this export. Validate the stated scope on the intended image.",
       "name": "Backlight",
       "next_validation": "Repeat brightness and blanking checks on the intended image.",
-      "record_age_days": 8,
+      "record_age_days": 9,
       "scope": "Day one",
       "state": "Working",
       "summary": "Evidence detail not yet published."
@@ -40,15 +40,15 @@
       "basis": "Build observation",
       "build": "57",
       "evidence_digests": [],
-      "evidence_recorded_at": "2026-10-29T20:06:14Z",
+      "evidence_recorded_at": "2026-10-29T22:40:14Z",
       "id": "gpu",
-      "limitations": "Run ended incomplete without a terminal summary. The same failure point occurred on Build 56; full GLES 3.2 conformance remains unproven.",
+      "limitations": "The run was incomplete without a terminal summary; no kernel oops was observed. Historical Build 34's nine-case image-atomics check passed and its source is present in current Mesa, but this is not a current-image rerun or full GLES 3.2 conformance.",
       "name": "GPU and OpenGL ES 3.2",
-      "next_validation": "Isolate the D24 depth/stencil device loss, then rerun conformance coverage.",
+      "next_validation": "Validate the combined depth and stencil fixes, then rerun D24S8 and conformance coverage.",
       "record_age_days": 0,
       "scope": "Day one",
       "state": "Broken",
-      "summary": "Build 57 passed six D16 and D32F graphics controls. The first D24S8 case lost the Vulkan device with two guilty Fragment resets."
+      "summary": "Build 57 completed six D16 and D32F graphics controls. The probe reported the end of the D24S8 upload phase, then stalled in the following depth draw; the run exited 137 with one GPU reset."
     },
     {
       "basis": "Build observation",
@@ -109,18 +109,16 @@
     {
       "basis": "Build observation",
       "build": "57",
-      "evidence_digests": [
-        "3782d9c8b3a9b5c2cce31c4d2553d1544ad08f29df9110dabef8b5b0e1e17859"
-      ],
-      "evidence_recorded_at": "2026-10-29T19:38:28Z",
+      "evidence_digests": [],
+      "evidence_recorded_at": "2026-10-29T22:34:47Z",
       "id": "speakers",
-      "limitations": "Digital playback activity does not prove audible output. No hardware-fault conclusion is established.",
+      "limitations": "Validated digital configuration does not establish audible output. No hardware-fault conclusion is established.",
       "name": "Speakers",
       "next_validation": "Restore audible output and pass a calibrated acoustic playback test.",
       "record_age_days": 0,
       "scope": "Day one",
       "state": "Broken",
-      "summary": "The canonical playback tone remains below the acoustic threshold: measured SNR 0.214 dB on Build 57."
+      "summary": "Build 57 free-running 48 kHz stereo PCM and all 42 DRC register halves match the configured values. The acoustic playback test remains negative at -0.341 dB SNR."
     },
     {
       "basis": "Candidate observation",
@@ -259,7 +257,7 @@
       "limitations": "No current-image acceptance is established by this export. Validate the stated scope on the intended image.",
       "name": "Battery and fuel gauge",
       "next_validation": "Measure reporting accuracy and discharge behavior on the complete handheld.",
-      "record_age_days": 8,
+      "record_age_days": 9,
       "scope": "Real handheld",
       "state": "Parked",
       "summary": "Evidence detail not yet published."
@@ -310,15 +308,15 @@
       "basis": "Build observation",
       "build": "57",
       "evidence_digests": [],
-      "evidence_recorded_at": "2026-10-29T19:23:18Z",
+      "evidence_recorded_at": "2026-10-29T22:11:58Z",
       "id": "thermal",
-      "limitations": "No current-image acceptance is established by this export. Validate the stated scope on the intended image.",
+      "limitations": "Real hot-condition and sustained-load response, including GPU and DDR limits, remain unproven.",
       "name": "Thermal protection",
-      "next_validation": "Complete threshold assertions and bounded load-response validation.",
+      "next_validation": "Validate real hot-condition and bounded load response, including GPU and DDR limits.",
       "record_age_days": 0,
       "scope": "Day one",
       "state": "Partial",
-      "summary": "Evidence detail not yet published."
+      "summary": "Build 57 nominal thermal topology replay passed after correcting the positive and negative assertions."
     },
     {
       "basis": "Source only",
@@ -399,7 +397,7 @@
       "limitations": "This is a scoped clip result on an older image. A real Steam Link stream was not part of that test.",
       "name": "H.264 video decode",
       "next_validation": "Validate sustained hardware decode in a real Steam Link stream.",
-      "record_age_days": 8,
+      "record_age_days": 9,
       "scope": "Day one",
       "state": "Working",
       "summary": "Historical Build 21 decoded a pinned H.264 clip through Cedrus with hardware request activity and no software fallback."
@@ -420,12 +418,12 @@
     }
   ],
   "hardware_counts": {
-    "Broken": 4,
+    "Broken": 3,
     "Parked": 3,
-    "Partial": 15,
+    "Partial": 16,
     "Working": 7
   },
-  "input_sha256": "978b45543ff1059323d0172dc41d9da04bb4fb8dff47ebf5909056e1a3ca8d3d",
+  "input_sha256": "c76a1c23fb58badc4e979a4819a95d4826fded86cccc15c9b29ce1f0d4073eb6",
   "priorities": [
     {
       "id": "steam_link",
@@ -914,5 +912,5 @@
     }
   ],
   "schema_version": 1,
-  "snapshot_at": "2026-10-29T20:06:32Z"
+  "snapshot_at": "2026-10-29T23:06:23Z"
 }
