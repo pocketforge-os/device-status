@@ -98,7 +98,7 @@ class SiteTest(unittest.TestCase):
     def test_landing_and_readme_snapshot_facts_refuse(self):
         cases=[('index.html','<h2>TrimUI Smart Pro</h2>','<h2>Another device</h2>'),
                ('index.html','Allwinner A133 · PowerVR GE8300','Another chip · Another GPU'),
-               ('index.html','Snapshot: 2026-10-29T20:06:32Z','Old: 2026-10-29T20:06:32Z'),
+               ('index.html','Snapshot: 2026-10-29T23:06:23Z','Old: 2026-10-29T23:06:23Z'),
                ('README.md','29 hardware components and 32 product priorities','999 hardware components and 32 product priorities'),
                ('README.md','The current snapshot is','An unrelated snapshot is')]
         for name,before,after in cases:

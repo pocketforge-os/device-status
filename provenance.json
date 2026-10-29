@@ -1,9 +1,9 @@
 {
-  "exporter_commit": "9aeb42645c332cd701e49fee1d072be34583bc31",
-  "snapshot_at": "2026-10-29T20:06:32Z",
-  "exported_at": "2026-10-29T20:31:39Z",
+  "exporter_commit": "f53892848c44a85f6c52f1cf280c4aef9a83fdc1",
+  "snapshot_at": "2026-10-29T23:06:23Z",
+  "exported_at": "2026-10-29T23:27:24Z",
   "artifacts": {
-    "trimui-smart-pro/hardware-status.html": "70f2a3d9f940ee438dac96b7a08ef0c4ea263797bda271184b75f442808b399e",
-    "trimui-smart-pro/hardware-status.json": "f517a4b707db45020443d27f72b19a1858fa86f4ca28f04cbd19820dc5fda831"
+    "trimui-smart-pro/hardware-status.html": "32f23911733e1716abdef2dc0ce018637dd0d90fdaacc7d9b17d09fcf25bb23d",
+    "trimui-smart-pro/hardware-status.json": "69defa7ea2bee112c3e57d30c76e06f67832ebcc991b0c587aa4f1df3b58adbf"
   }
 }

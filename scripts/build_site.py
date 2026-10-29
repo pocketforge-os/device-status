@@ -16,15 +16,15 @@ SITE_FILES = ('index.html', 'provenance.json',
 # Release pins for the independently reviewed exporter output. Provenance alone
 # cannot authorize different bytes. Updating these pins requires a reviewed export.
 REVIEWED_PAIR = {
-    'trimui-smart-pro/hardware-status.html': '70f2a3d9f940ee438dac96b7a08ef0c4ea263797bda271184b75f442808b399e',
-    'trimui-smart-pro/hardware-status.json': 'f517a4b707db45020443d27f72b19a1858fa86f4ca28f04cbd19820dc5fda831',
+    'trimui-smart-pro/hardware-status.html': '32f23911733e1716abdef2dc0ce018637dd0d90fdaacc7d9b17d09fcf25bb23d',
+    'trimui-smart-pro/hardware-status.json': '69defa7ea2bee112c3e57d30c76e06f67832ebcc991b0c587aa4f1df3b58adbf',
 }
 # Reviewed editorial bytes are release pins, not a natural-language validator.
 REVIEWED_PAGES = {
-    'index.html': '021692a698da4507d3dd341dec2a855ed067760764875c382e26ac4d930c5580',
-    'README.md': '264a23a021480476f0f9d86ea49b278a365fae017e331e2b6a2637ebb37c0312',
+    'index.html': '1df975a285e220fc800bc6c8979c5824578b906ecd1380fc4fba4eeb0bdd0d74',
+    'README.md': '97cd1b232604a7ba9d7311e9f0b817a13f5a4ccb4be4f9b95999cf1616f59c9e',
 }
-REVIEWED_EXPORTER = '9aeb42645c332cd701e49fee1d072be34583bc31'
+REVIEWED_EXPORTER = 'f53892848c44a85f6c52f1cf280c4aef9a83fdc1'
 SOURCE_FILES = set(SITE_FILES) | {'README.md', '.gitignore', 'scripts/build_site.py',
                                 'tests/test_site.py', '.github/workflows/pages.yml'}
 PRIVATE = re.compile(r'/(?:home|root|run|tmp|var)/|\.lan\b|\b(?:pft-|tsp-)|\b(?:[0-9]{1,3}\.){3}[0-9]{1,3}\b|\b(?:[0-9a-fA-F]{2}:){5}[0-9a-fA-F]{2}\b')
