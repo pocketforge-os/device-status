@@ -6,7 +6,7 @@
     "scope": "Functional downstream hardware support first. Upstreaming follows later; this page makes no upstream acceptance claim.",
     "soc": "Allwinner A133"
   },
-  "generated_at": "2026-10-29T23:27:24Z",
+  "generated_at": "2026-10-30T01:31:54Z",
   "hardware": [
     {
       "basis": "Build observation",
@@ -38,17 +38,19 @@
     },
     {
       "basis": "Build observation",
-      "build": "57",
-      "evidence_digests": [],
-      "evidence_recorded_at": "2026-10-29T22:40:14Z",
+      "build": "58",
+      "evidence_digests": [
+        "6d142f3f97a76ca3a8bd34c14c999523911228b8bf94812f0907e007eed43065"
+      ],
+      "evidence_recorded_at": "2026-10-30T00:49:28Z",
       "id": "gpu",
-      "limitations": "The run was incomplete without a terminal summary; no kernel oops was observed. Historical Build 34's nine-case image-atomics check passed and its source is present in current Mesa, but this is not a current-image rerun or full GLES 3.2 conformance.",
+      "limitations": "This was a library iteration, not stock Build 58 GPU validation or final acceptance. Shadow rendering, D32FS8, full consumer workloads and the integrated whole image remain unverified.",
       "name": "GPU and OpenGL ES 3.2",
-      "next_validation": "Validate the combined depth and stencil fixes, then rerun D24S8 and conformance coverage.",
+      "next_validation": "Validate remaining shadow, D32FS8 and full consumer workloads, then test the integrated whole image.",
       "record_age_days": 0,
       "scope": "Day one",
       "state": "Broken",
-      "summary": "Build 57 completed six D16 and D32F graphics controls. The probe reported the end of the D24S8 upload phase, then stalled in the following depth draw; the run exited 137 with one GPU reset."
+      "summary": "On a Build 58 base image, candidate graphics libraries passed 17 targeted numeric and phase cases. Before and after kernel logs were identical, with no detected reset."
     },
     {
       "basis": "Build observation",
@@ -73,7 +75,7 @@
       "limitations": "No current-image acceptance is established by this export. Validate the stated scope on the intended image.",
       "name": "Wi-Fi",
       "next_validation": "Measure sustained connectivity, roaming and recovery on the handheld.",
-      "record_age_days": 11,
+      "record_age_days": 12,
       "scope": "Day one",
       "state": "Working",
       "summary": "Evidence detail not yet published."
@@ -108,17 +110,20 @@
     },
     {
       "basis": "Build observation",
-      "build": "57",
-      "evidence_digests": [],
-      "evidence_recorded_at": "2026-10-29T22:34:47Z",
+      "build": "58",
+      "evidence_digests": [
+        "d0646fd5b6191ca10c610276b6d5665eb094ab23c8c8d3db51fa6c5589918e67",
+        "3c1b5c6a51f3a275495edd49e7329a0452c00865998700145a662c2c809a0cd5"
+      ],
+      "evidence_recorded_at": "2026-10-30T00:49:29Z",
       "id": "speakers",
-      "limitations": "Validated digital configuration does not establish audible output. No hardware-fault conclusion is established.",
+      "limitations": "PCM and DRC diagnostics were complete, and state restoration was verified. The comparison does not establish audible output or a hardware fault.",
       "name": "Speakers",
       "next_validation": "Restore audible output and pass a calibrated acoustic playback test.",
       "record_age_days": 0,
       "scope": "Day one",
       "state": "Broken",
-      "summary": "Build 57 free-running 48 kHz stereo PCM and all 42 DRC register halves match the configured values. The acoustic playback test remains negative at -0.341 dB SNR."
+      "summary": "A same-source comparison on Build 58 measured -0.263 dB SNR through default output and 1.958 dB through direct hardware. Both were valid acoustic-negative results."
     },
     {
       "basis": "Candidate observation",
@@ -143,7 +148,7 @@
       "limitations": "No current-image acceptance is established by this export. Validate the stated scope on the intended image.",
       "name": "Headphone jack",
       "next_validation": "Resume jack detection and audio tests when this scope is unparked.",
-      "record_age_days": 11,
+      "record_age_days": 12,
       "scope": "Parked",
       "state": "Parked",
       "summary": "Evidence detail not yet published."
@@ -157,7 +162,7 @@
       "limitations": "No current-image acceptance is established by this export. Validate the stated scope on the intended image.",
       "name": "Built-in gamepad",
       "next_validation": "Complete attended stick, trigger and button decoding coverage.",
-      "record_age_days": 2,
+      "record_age_days": 3,
       "scope": "Day one",
       "state": "Partial",
       "summary": "Evidence detail not yet published."
@@ -171,7 +176,7 @@
       "limitations": "No current-image acceptance is established by this export. Validate the stated scope on the intended image.",
       "name": "Function, menu and volume keys",
       "next_validation": "Verify each physical control and its system action.",
-      "record_age_days": 2,
+      "record_age_days": 3,
       "scope": "Day one",
       "state": "Partial",
       "summary": "Evidence detail not yet published."
@@ -196,15 +201,15 @@
       "basis": "Build observation",
       "build": "47",
       "evidence_digests": [],
-      "evidence_recorded_at": "2026-10-27T00:35:58Z",
+      "evidence_recorded_at": "2026-10-30T00:52:45Z",
       "id": "power_button",
-      "limitations": "No current-image acceptance is established by this export. Validate the stated scope on the intended image.",
+      "limitations": "The record date is a reconciliation date, not a new test date. Build 58 source retained the wrong policy; subsequently merged fixes still require final-image validation.",
       "name": "Power button",
-      "next_validation": "Revalidate press events and intended power actions on the target image.",
-      "record_age_days": 2,
+      "next_validation": "Validate the intended short-press policy without inhibitors on the final full image.",
+      "record_age_days": 0,
       "scope": "Day one",
-      "state": "Working",
-      "summary": "Evidence detail not yet published."
+      "state": "Broken",
+      "summary": "Historical Build 47's earlier apparent pass was invalid because a power-key inhibitor was active. A later short press without the inhibitor powered the device off."
     },
     {
       "basis": "Build observation",
@@ -215,7 +220,7 @@
       "limitations": "No current-image acceptance is established by this export. Validate the stated scope on the intended image.",
       "name": "Hall sensor",
       "next_validation": "Establish the physical purpose and verify meaningful state changes.",
-      "record_age_days": 2,
+      "record_age_days": 3,
       "scope": "Investigate",
       "state": "Partial",
       "summary": "Evidence detail not yet published."
@@ -229,7 +234,7 @@
       "limitations": "No current-image acceptance is established by this export. Validate the stated scope on the intended image.",
       "name": "Infrared receiver",
       "next_validation": "Verify receive behavior and independence from the vibration GPIO.",
-      "record_age_days": 2,
+      "record_age_days": 3,
       "scope": "Day one",
       "state": "Partial",
       "summary": "Evidence detail not yet published."
@@ -243,7 +248,7 @@
       "limitations": "No current-image acceptance is established by this export. Validate the stated scope on the intended image.",
       "name": "RGB LEDs",
       "next_validation": "Recheck channels, brightness and restoration on the intended image.",
-      "record_age_days": 2,
+      "record_age_days": 3,
       "scope": "Day one",
       "state": "Working",
       "summary": "Evidence detail not yet published."
@@ -271,7 +276,7 @@
       "limitations": "No current-image acceptance is established by this export. Validate the stated scope on the intended image.",
       "name": "Charging",
       "next_validation": "Verify charging state, limits and transitions on the complete handheld.",
-      "record_age_days": 11,
+      "record_age_days": 12,
       "scope": "Real handheld",
       "state": "Parked",
       "summary": "Evidence detail not yet published."
@@ -306,17 +311,19 @@
     },
     {
       "basis": "Build observation",
-      "build": "57",
-      "evidence_digests": [],
-      "evidence_recorded_at": "2026-10-29T22:11:58Z",
+      "build": "58",
+      "evidence_digests": [
+        "1f60457a71d898ed9151c506fe4c9ad516a8e2ca168a33f47830e639141348f4"
+      ],
+      "evidence_recorded_at": "2026-10-30T00:53:04Z",
       "id": "thermal",
-      "limitations": "Real hot-condition and sustained-load response, including GPU and DDR limits, remain unproven.",
+      "limitations": "The passive trip was not reached. CPU 70 and 80 C passive and 110 C critical, plus GPU and DDR 110 C critical trip readouts are verified; throttling, critical response and final whole-image acceptance remain unproven.",
       "name": "Thermal protection",
-      "next_validation": "Validate real hot-condition and bounded load response, including GPU and DDR limits.",
+      "next_validation": "Validate bounded passive throttling and critical response, then test the integrated whole image.",
       "record_age_days": 0,
       "scope": "Day one",
       "state": "Partial",
-      "summary": "Build 57 nominal thermal topology replay passed after correcting the positive and negative assertions."
+      "summary": "A 60-second four-core diagnostic on Build 58 collected 61 samples at 1.464 GHz. Peak temperatures were CPU 69.072 C, GPU 60.605 C and DDR 64.570 C."
     },
     {
       "basis": "Source only",
@@ -341,7 +348,7 @@
       "limitations": "No current-image acceptance is established by this export. Validate the stated scope on the intended image.",
       "name": "SD card",
       "next_validation": "Recheck read, write and boot behavior on the intended image.",
-      "record_age_days": 11,
+      "record_age_days": 12,
       "scope": "Day one",
       "state": "Working",
       "summary": "Evidence detail not yet published."
@@ -411,19 +418,19 @@
       "limitations": "No current-image acceptance is established by this export. Validate the stated scope on the intended image.",
       "name": "Video encode and capture",
       "next_validation": "Establish an owned hardware encode path, then validate capture.",
-      "record_age_days": 11,
+      "record_age_days": 12,
       "scope": "Later",
       "state": "Broken",
       "summary": "Evidence detail not yet published."
     }
   ],
   "hardware_counts": {
-    "Broken": 3,
+    "Broken": 4,
     "Parked": 3,
     "Partial": 16,
-    "Working": 7
+    "Working": 6
   },
-  "input_sha256": "c76a1c23fb58badc4e979a4819a95d4826fded86cccc15c9b29ce1f0d4073eb6",
+  "input_sha256": "b50cb8e445d6b9e7434325a583a216fce01a05071c5039119166f21e605049c0",
   "priorities": [
     {
       "id": "steam_link",
@@ -438,7 +445,7 @@
           "limitations": "No current-image acceptance is established by this export. Validate the stated scope on the intended image.",
           "name": "Application launch",
           "next_validation": "Verify the shipped app starts and remains active in the stock session.",
-          "record_age_days": 11,
+          "record_age_days": 12,
           "scope": "Product goal",
           "state": "Broken",
           "summary": "Evidence detail not yet published."
@@ -452,7 +459,7 @@
           "limitations": "No current-image acceptance is established by this export. Validate the stated scope on the intended image.",
           "name": "PC pairing",
           "next_validation": "Complete pairing with a reachable streaming host.",
-          "record_age_days": 11,
+          "record_age_days": 12,
           "scope": "Product goal",
           "state": "Untested",
           "summary": "Evidence detail not yet published."
@@ -466,7 +473,7 @@
           "limitations": "No current-image acceptance is established by this export. Validate the stated scope on the intended image.",
           "name": "720p30 streaming",
           "next_validation": "Measure a sustained stream, decode path and responsiveness.",
-          "record_age_days": 11,
+          "record_age_days": 12,
           "scope": "Product goal",
           "state": "Untested",
           "summary": "Evidence detail not yet published."
@@ -480,7 +487,7 @@
           "limitations": "No current-image acceptance is established by this export. Validate the stated scope on the intended image.",
           "name": "Controller input",
           "next_validation": "Verify the built-in controls reach the streamed game.",
-          "record_age_days": 11,
+          "record_age_days": 12,
           "scope": "Product goal",
           "state": "Untested",
           "summary": "Evidence detail not yet published."
@@ -494,7 +501,7 @@
           "limitations": "No current-image acceptance is established by this export. Validate the stated scope on the intended image.",
           "name": "Game audio",
           "next_validation": "Verify real streamed audio through the intended output.",
-          "record_age_days": 11,
+          "record_age_days": 12,
           "scope": "Product goal",
           "state": "Broken",
           "summary": "Evidence detail not yet published."
@@ -508,7 +515,7 @@
           "limitations": "No current-image acceptance is established by this export. Validate the stated scope on the intended image.",
           "name": "Display rotation",
           "next_validation": "Verify orientation through launch, stream and return.",
-          "record_age_days": 11,
+          "record_age_days": 12,
           "scope": "Product goal",
           "state": "Working",
           "summary": "Evidence detail not yet published."
@@ -564,7 +571,7 @@
           "limitations": "No current-image acceptance is established by this export. Validate the stated scope on the intended image.",
           "name": "Panel recovery after a session",
           "next_validation": "Verify display output returns after application exit.",
-          "record_age_days": 11,
+          "record_age_days": 12,
           "scope": "Product goal",
           "state": "Broken",
           "summary": "Evidence detail not yet published."
@@ -578,7 +585,7 @@
           "limitations": "No current-image acceptance is established by this export. Validate the stated scope on the intended image.",
           "name": "Application sandbox",
           "next_validation": "Verify the shipped application policy with meaningful allow and deny controls.",
-          "record_age_days": 11,
+          "record_age_days": 12,
           "scope": "Product goal",
           "state": "Broken",
           "summary": "Evidence detail not yet published."
@@ -599,7 +606,7 @@
           "limitations": "No current-image acceptance is established by this export. Validate the stated scope on the intended image.",
           "name": "Cold boot into PocketForge",
           "next_validation": "Verify a complete cold boot on the intended full image.",
-          "record_age_days": 11,
+          "record_age_days": 12,
           "scope": "Product goal",
           "state": "Broken",
           "summary": "Evidence detail not yet published."
@@ -613,7 +620,7 @@
           "limitations": "No current-image acceptance is established by this export. Validate the stated scope on the intended image.",
           "name": "Launcher",
           "next_validation": "Validate launch, navigation and return using handheld controls.",
-          "record_age_days": 11,
+          "record_age_days": 12,
           "scope": "Product goal",
           "state": "Broken",
           "summary": "Evidence detail not yet published."
@@ -627,7 +634,7 @@
           "limitations": "No current-image acceptance is established by this export. Validate the stated scope on the intended image.",
           "name": "System menu",
           "next_validation": "Verify essential settings and navigation on the device.",
-          "record_age_days": 11,
+          "record_age_days": 12,
           "scope": "Product goal",
           "state": "Broken",
           "summary": "Evidence detail not yet published."
@@ -641,7 +648,7 @@
           "limitations": "No current-image acceptance is established by this export. Validate the stated scope on the intended image.",
           "name": "On-screen keyboard and input",
           "next_validation": "Validate text entry and input handoff in real applications.",
-          "record_age_days": 11,
+          "record_age_days": 12,
           "scope": "Product goal",
           "state": "Broken",
           "summary": "Evidence detail not yet published."
@@ -655,7 +662,7 @@
           "limitations": "No current-image acceptance is established by this export. Validate the stated scope on the intended image.",
           "name": "Wi-Fi setup",
           "next_validation": "Verify network discovery, connection and recovery through the interface.",
-          "record_age_days": 11,
+          "record_age_days": 12,
           "scope": "Product goal",
           "state": "Broken",
           "summary": "Evidence detail not yet published."
@@ -669,7 +676,7 @@
           "limitations": "No current-image acceptance is established by this export. Validate the stated scope on the intended image.",
           "name": "Bluetooth pairing interface",
           "next_validation": "Verify pairing and device management through the interface.",
-          "record_age_days": 11,
+          "record_age_days": 12,
           "scope": "Product goal",
           "state": "Broken",
           "summary": "Evidence detail not yet published."
@@ -683,7 +690,7 @@
           "limitations": "No current-image acceptance is established by this export. Validate the stated scope on the intended image.",
           "name": "PipeWire audio",
           "next_validation": "Verify playback, capture and device routing.",
-          "record_age_days": 11,
+          "record_age_days": 12,
           "scope": "Product goal",
           "state": "Broken",
           "summary": "Evidence detail not yet published."
@@ -697,7 +704,7 @@
           "limitations": "No current-image acceptance is established by this export. Validate the stated scope on the intended image.",
           "name": "System volume",
           "next_validation": "Verify volume controls, mute and application behavior.",
-          "record_age_days": 11,
+          "record_age_days": 12,
           "scope": "Product goal",
           "state": "Broken",
           "summary": "Evidence detail not yet published."
@@ -711,7 +718,7 @@
           "limitations": "No current-image acceptance is established by this export. Validate the stated scope on the intended image.",
           "name": "Battery indicator",
           "next_validation": "Compare the interface with validated battery measurements.",
-          "record_age_days": 11,
+          "record_age_days": 12,
           "scope": "Product goal",
           "state": "Broken",
           "summary": "Evidence detail not yet published."
@@ -725,7 +732,7 @@
           "limitations": "No current-image acceptance is established by this export. Validate the stated scope on the intended image.",
           "name": "Power menu",
           "next_validation": "Verify the supported power actions and return paths.",
-          "record_age_days": 11,
+          "record_age_days": 12,
           "scope": "Product goal",
           "state": "Broken",
           "summary": "Evidence detail not yet published."
@@ -739,7 +746,7 @@
           "limitations": "No current-image acceptance is established by this export. Validate the stated scope on the intended image.",
           "name": "First-boot configuration",
           "next_validation": "Verify initial settings on a newly written image.",
-          "record_age_days": 11,
+          "record_age_days": 12,
           "scope": "Product goal",
           "state": "Working",
           "summary": "Evidence detail not yet published."
@@ -753,7 +760,7 @@
           "limitations": "No current-image acceptance is established by this export. Validate the stated scope on the intended image.",
           "name": "Updates and OTA",
           "next_validation": "Validate a complete supported update and recovery cycle.",
-          "record_age_days": 11,
+          "record_age_days": 12,
           "scope": "Product goal",
           "state": "Untested",
           "summary": "Evidence detail not yet published."
@@ -767,7 +774,7 @@
           "limitations": "No current-image acceptance is established by this export. Validate the stated scope on the intended image.",
           "name": "Wi-Fi while moving",
           "next_validation": "Measure connection stability and roaming on the handheld.",
-          "record_age_days": 11,
+          "record_age_days": 12,
           "scope": "Product goal",
           "state": "Untested",
           "summary": "Evidence detail not yet published."
@@ -781,7 +788,7 @@
           "limitations": "No current-image acceptance is established by this export. Validate the stated scope on the intended image.",
           "name": "Battery life and reporting",
           "next_validation": "Measure runtime and reporting on the complete handheld.",
-          "record_age_days": 11,
+          "record_age_days": 12,
           "scope": "Product goal",
           "state": "Untested",
           "summary": "Evidence detail not yet published."
@@ -839,7 +846,7 @@
           "limitations": "No current-image acceptance is established by this export. Validate the stated scope on the intended image.",
           "name": "A133 in QEMU",
           "next_validation": "Establish a reproducible boot and hardware-model validation path.",
-          "record_age_days": 11,
+          "record_age_days": 12,
           "scope": "Product goal",
           "state": "Untested",
           "summary": "Evidence detail not yet published."
@@ -860,7 +867,7 @@
           "limitations": "No current-image acceptance is established by this export. Validate the stated scope on the intended image.",
           "name": "Capture and instant replay",
           "next_validation": "Resume after a validated capture and encoding path exists.",
-          "record_age_days": 11,
+          "record_age_days": 12,
           "scope": "Product goal",
           "state": "Deferred",
           "summary": "Evidence detail not yet published."
@@ -874,7 +881,7 @@
           "limitations": "No current-image acceptance is established by this export. Validate the stated scope on the intended image.",
           "name": "PocketForge Browser",
           "next_validation": "Resume device acceptance after the core functional milestone.",
-          "record_age_days": 11,
+          "record_age_days": 12,
           "scope": "Product goal",
           "state": "Deferred",
           "summary": "Evidence detail not yet published."
@@ -888,7 +895,7 @@
           "limitations": "No current-image acceptance is established by this export. Validate the stated scope on the intended image.",
           "name": "Poolsuite",
           "next_validation": "Resume after the first functional milestone.",
-          "record_age_days": 11,
+          "record_age_days": 12,
           "scope": "Product goal",
           "state": "Deferred",
           "summary": "Evidence detail not yet published."
@@ -902,7 +909,7 @@
           "limitations": "No current-image acceptance is established by this export. Validate the stated scope on the intended image.",
           "name": "Install to internal storage",
           "next_validation": "Validate installation and recovery before enabling this workflow.",
-          "record_age_days": 11,
+          "record_age_days": 12,
           "scope": "Product goal",
           "state": "Deferred",
           "summary": "Evidence detail not yet published."
@@ -912,5 +919,5 @@
     }
   ],
   "schema_version": 1,
-  "snapshot_at": "2026-10-29T23:06:23Z"
+  "snapshot_at": "2026-10-30T00:54:43Z"
 }

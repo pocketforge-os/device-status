@@ -5,8 +5,8 @@ Portable, public snapshots of device hardware and product progress. Start with
 The [JSON](trimui-smart-pro/hardware-status.json) and [provenance](provenance.json)
 provide the same dated results and the reviewed artifact hashes.
 
-The current snapshot is **2026-10-29T23:06:23Z**, exported at
-**2026-10-29T23:27:24Z**. It covers 29 hardware components and 32 product priorities.
+The current snapshot is **2026-10-30T00:54:43Z**, exported at
+**2026-10-30T01:31:54Z**. It covers 29 hardware components and 32 product priorities.
 Functional downstream support comes first; upstreaming follows later. A Working
 row describes only its recorded scope. Older builds, candidates and source-only
 findings do not certify the latest image. Record dates can differ from original
